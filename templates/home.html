@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-4">Trips</h1>
+<div class="row">
+    {% for trip in trips %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <img src="{{ url_for('static', filename='trip_pics/' ~ trip.photo_file) }}" class="card-img-top" alt="{{ trip.name }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ trip.name }}</h5>
+                <p class="card-text"><strong>Destination:</strong> {{ trip.destination }}</p>
+                <p class="card-text"><strong>Start Date:</strong> {{ trip.start_date.strftime('%Y-%m-%d %H:%M') }}</p>
+                <a href="{{ url_for('trip', trip_id=trip.id) }}" class="btn btn-primary">View Trip</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

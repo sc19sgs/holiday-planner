@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.activity.label(class="form-label") }}
+        {{ form.activity(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.date.label(class="form-label") }}
+        {{ form.date(class="form-control datepicker") }}
+    </div>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr(".datepicker", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+        });
+    });
+</script>
+{% endblock %}

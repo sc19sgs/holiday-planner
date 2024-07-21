@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="POST" action="" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.name.label(class="form-label") }}
+        {{ form.name(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.destination.label(class="form-label") }}
+        {{ form.destination(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.start_date.label(class="form-label") }}
+        {{ form.start_date(class="form-control datepicker") }}
+    </div>
+    <div class="form-group">
+        {{ form.photo.label(class="form-label") }}
+        {{ form.photo(class="form-control-file") }}
+    </div>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr(".datepicker", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+        });
+    });
+</script>
+{% endblock %}

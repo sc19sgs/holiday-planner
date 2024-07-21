@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Account</h1>
+<p>Welcome, {{ current_user.username }}!</p>
+<h2>Your Trips</h2>
+{% for trip in trips %}
+    <div>
+        <h3><a href="{{ url_for('trip', trip_id=trip.id) }}">{{ trip.name }}</a></h3>
+        <p>{{ trip.destination }}</p>
+    </div>
+{% endfor %}
+{% endblock %}

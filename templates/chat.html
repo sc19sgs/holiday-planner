@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Chat for {{ trip.name }}</h1>
+<ul id="messages"></ul>
+<form id="messageForm">
+    <input id="myMessage" autocomplete="off" placeholder="Type your message..." /><button>Send</button>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.3/socket.io.js"></script>
+<script type="text/javascript">
+    var socket = io();
+
+    socket.on('connect', function() {
+        socket.emit('join', {'username': '{{ current_user.username }}', 'trip_id': '{{ trip.id }}'});
+    });
+
+    document.getElementById('messageForm').onsubmit = function(e) {
+        e.preventDefault();
+        var message = document.getElementById('myMessage').value;
+        socket.emit('message', {'msg': message, 'trip_id': '{{ trip.id }}', 'username': '{{ current_user.username }}'});
+        document.getElementById('myMessage').value = '';
+        return false;
+    };
+
+    socket.on('message', function(data) {
+        var li = document.createElement('li');
+        li.innerText = data;
+        document.getElementById('messages').appendChild(li);
+    });
+
+    window.onbeforeunload = function() {
+        socket.emit('leave', {'username': '{{ current_user.username }}', 'trip_id': '{{ trip.id }}'});
+    };
+</script>
+{% endblock %}
