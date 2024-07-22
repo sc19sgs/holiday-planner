@@ -7,6 +7,8 @@ from flask_login import login_user, current_user, logout_user, login_required
 import os
 import secrets
 from PIL import Image
+from opencage.geocoder import OpenCageGeocode
+import requests
 
 def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
@@ -21,11 +23,33 @@ def save_picture(form_picture):
 
     return picture_fn
 
+
+# For retreiving latitude & longitude coordinates from location
+def get_coordinates(destination):
+    api_key = '0c2bc23a5ede4e4cb7e9de1e77d1a668'  # Replace with your OpenCage API key
+    url = f'https://api.opencagedata.com/geocode/v1/json?q={destination}&key={api_key}'
+    response = requests.get(url)
+    data = response.json()
+
+    if data['results']:
+        lat = data['results'][0]['geometry']['lat']
+        lng = data['results'][0]['geometry']['lng']
+        return lat, lng
+    else:
+        return None, None
+
+
+
 @app.route('/')
 @app.route('/home')
 def home():
-    trips = Trip.query.all()
-    return render_template('home.html', trips=trips)
+    if current_user.is_authenticated:
+        trips = Trip.query.filter_by(user_id=current_user.id).all()
+        serialized_trips = [trip.serialize() for trip in trips]
+    else:
+        serialized_trips = []
+    return render_template('home.html', trips=serialized_trips)
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -76,7 +100,13 @@ def new_trip():
             photo_file = save_picture(form.photo.data)
         else:
             photo_file = 'default.jpg'
-        trip = Trip(name=form.name.data, destination=form.destination.data, start_date=form.start_date.data, photo_file=photo_file, organizer=current_user)
+        
+        lat, lng = get_coordinates(form.destination.data)
+        if lat is None or lng is None:
+            flash('Could not find coordinates for the provided destination.', 'danger')
+            return redirect(url_for('new_trip'))
+
+        trip = Trip(name=form.name.data, destination=form.destination.data, start_date=form.start_date.data, photo_file=photo_file, latitude=lat, longitude=lng, organizer=current_user)
         db.session.add(trip)
         db.session.commit()
         flash('Your trip has been created!', 'success')
@@ -111,6 +141,14 @@ def update_trip(trip_id):
         trip.name = form.name.data
         trip.destination = form.destination.data
         trip.start_date = form.start_date.data
+        
+        lat, lng = get_coordinates(form.destination.data)
+        if lat is None or lng is None:
+            flash('Could not find coordinates for the provided destination.', 'danger')
+            return redirect(url_for('update_trip', trip_id=trip.id))
+        
+        trip.latitude = lat
+        trip.longitude = lng
         db.session.commit()
         flash('Your trip has been updated!', 'success')
         return redirect(url_for('trip', trip_id=trip.id))

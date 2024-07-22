@@ -23,12 +23,29 @@ class Trip(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     destination = db.Column(db.String(100), nullable=False)
     photo_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)    
     start_date = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     itineraries = db.relationship('Itinerary', backref='trip', lazy=True, cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"Trip('{self.name}', '{self.date_posted}', '{self.destination}')"
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'date_posted': self.date_posted.isoformat(),
+            'destination': self.destination,
+            'photo_file': self.photo_file,
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            'start_date': self.start_date.isoformat(),
+            'user_id': self.user_id
+        }
+
+
 
 class Itinerary(db.Model):
     id = db.Column(db.Integer, primary_key=True)

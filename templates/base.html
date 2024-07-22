@@ -6,10 +6,30 @@
     <title>{{ title }} - Holiday Planner</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .navbar {
+            transition: top 0.3s;
+        }
+        .navbar-hidden {
+            top: -80px; /* Adjust this value as needed */
+        }
+        .map-container {
+            height: 500px; /* Fixed height for the map container */
+            width: 100%; /* Full width */
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a href="{{ url_for('home') }}">
+            <img class="navbar-brand" src="../static/Logo/Holiday_Planner_Logo.png" width="65" height="70" >
+        </a>
         <a class="navbar-brand" href="{{ url_for('home') }}">Holiday Planner</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
@@ -34,7 +54,7 @@
             </ul>
         </div>
     </nav>
-    <div class="container mt-4">
+    <div class="container content-wrapper mt-4">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         <div class="row">
@@ -52,6 +72,23 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        const scrollThreshold = 25; // Threshold to trigger the reappearance of the navbar
+
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop) {
+                // Downscroll
+                navbar.classList.add('navbar-hidden');
+            } else if (lastScrollTop - scrollTop > scrollThreshold) {
+                // Upscroll past threshold
+                navbar.classList.remove('navbar-hidden');
+            }
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+        });
+    </script>
     {% block scripts %}{% endblock %}
 </body>
 </html>
