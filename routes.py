@@ -9,6 +9,10 @@ import secrets
 from PIL import Image
 from opencage.geocoder import OpenCageGeocode
 import requests
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
@@ -26,7 +30,9 @@ def save_picture(form_picture):
 
 # For retreiving latitude & longitude coordinates from location
 def get_coordinates(destination):
-    api_key = '0c2bc23a5ede4e4cb7e9de1e77d1a668'  # Replace with your OpenCage API key
+    api_key = os.getenv('OPENCAGE_API_KEY')  # Get the API key from environment variable
+    if not api_key:
+        raise ValueError("No API key found. Please set the OPENCAGE_API_KEY environment variable.")
     url = f'https://api.opencagedata.com/geocode/v1/json?q={destination}&key={api_key}'
     response = requests.get(url)
     data = response.json()
