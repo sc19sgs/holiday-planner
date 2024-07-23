@@ -143,3 +143,74 @@ form input[type="submit"] {
 #map {
     height: 500px;
 }
+
+#tripPlanningContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.trip-step {
+    display: none;
+    text-align: center;
+}
+
+.next-btn {
+    margin-top: 20px;
+}
+
+.interests {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.interest-btn {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.interest-btn.selected {
+    background-color: #0056b3;
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.budget-category {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.budget-category label {
+    flex: 1;
+}
+
+.budget-category input[type="range"] {
+    flex: 2;
+}
+
+.budget-category span {
+    flex: 1;
+    text-align: right;
+    margin-left: 10px;
+}
+
+.budget-category select {
+    flex: 1;
+    margin-left: 10px;
+}
+

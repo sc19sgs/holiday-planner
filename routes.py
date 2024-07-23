@@ -52,9 +52,10 @@ def home():
     if current_user.is_authenticated:
         trips = Trip.query.filter_by(user_id=current_user.id).all()
         serialized_trips = [trip.serialize() for trip in trips]
+        deserialized_trips = [Trip.deserialize_trip(trip) for trip in serialized_trips]
     else:
-        serialized_trips = []
-    return render_template('home.html', trips=serialized_trips)
+        deserialized_trips = []
+    return render_template('home.html', trips=deserialized_trips)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -132,6 +133,18 @@ def trip(trip_id):
         return redirect(url_for('trip', trip_id=trip.id))
     itineraries = Itinerary.query.filter_by(trip_id=trip.id).all()
     return render_template('trip.html', title=trip.name, trip=trip, form=form, itineraries=itineraries)
+
+@app.route('/plan_trip', methods=['GET', 'POST'])
+@login_required
+def plan_trip():
+    if request.method == 'POST':
+        # Process the form data
+        form_data = request.form.to_dict()
+        # Call the function to generate the itinerary using the form data
+        itinerary = generate_itinerary(form_data)
+        return render_template('itinerary.html', itinerary=itinerary)
+    return render_template('plan_trip.html')
+
 
 @app.route('/trip/<int:trip_id>/update', methods=['GET', 'POST'])
 @login_required

@@ -45,6 +45,10 @@ class Trip(db.Model):
             'user_id': self.user_id
         }
 
+    def deserialize_trip(serialized_trip):
+        serialized_trip['date_posted'] = datetime.fromisoformat(serialized_trip['date_posted'])
+        serialized_trip['start_date'] = datetime.fromisoformat(serialized_trip['start_date'])
+        return serialized_trip
 
 
 class Itinerary(db.Model):

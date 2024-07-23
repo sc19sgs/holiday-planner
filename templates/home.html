@@ -27,7 +27,8 @@ crossorigin=""/>
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">{{ trip.name }}</h5>
                     <p class="card-text"><strong>Destination:</strong> {{ trip.destination }}</p>
-                    <p class="card-text"><strong>Start Date:</strong> {{ trip.start_date }}</p>
+                    <!-- <p class="card-text"><strong>Start Date:</strong> {{ trip.start_date }}</p> -->
+                    <p><strong>Start Date:</strong> {{ trip.start_date.strftime('%Y-%m-%d %H:%M') }}</p>
                     <a href="{{ url_for('trip', trip_id=trip.id) }}" class="btn btn-primary mt-auto">View Trip</a>
                 </div>
             </div>

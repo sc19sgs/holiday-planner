@@ -22,6 +22,10 @@
                 <a href="{{ url_for('chat', trip_id=trip.id) }}" class="btn btn-secondary mt-2">Chat</a>
             </div>
         </div>
+        <!-- Plan Your Trip Button -->
+        <div class="mt-4">
+            <button id="planTripBtn" class="btn btn-success btn-lg">Plan Your Trip!</button>
+        </div>
     </div>
 </div>
 
@@ -73,6 +77,11 @@
         flatpickr(".datepicker", {
             enableTime: true,
             dateFormat: "Y-m-d H:i",
+        });
+
+        // Plan Your Trip Button
+        document.getElementById('planTripBtn').addEventListener('click', function() {
+            window.location.href = "/plan_trip";
         });
     });
 </script>
